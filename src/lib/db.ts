@@ -2,9 +2,18 @@ import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
 import * as schema from "@/drizzle/schema";
+import { getServerEnv } from "@/lib/env";
 
-const databaseUrl =
-  process.env.DATABASE_URL ?? "postgresql://user:password@localhost:5432/dbname";
+function getDatabaseUrl() {
+  try {
+    const env = getServerEnv();
+    return env.DATABASE_URL;
+  } catch {
+    return process.env.DATABASE_URL ?? "postgresql://user:password@localhost:5432/dbname";
+  }
+}
+
+const databaseUrl = getDatabaseUrl();
 
 const sql = neon(databaseUrl);
 
