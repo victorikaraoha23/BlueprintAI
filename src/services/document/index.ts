@@ -21,7 +21,7 @@ export async function generateDocument(blueprintId: string) {
   return document;
 }
 
-export async function uploadToBlob(content: unknown) {
+export async function uploadToBlob(_content: unknown) {
   // Mock implementation that returns a stored reference
   const blobUrl = `https://blob.vercel-storage.com/${Date.now()}.json`;
   const blobToken = `token_${Math.random().toString(36).substring(7)}`;
@@ -55,6 +55,10 @@ export async function createDocumentVersion(
     throw ownership.error;
   }
   
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+  
   // Get latest version
   const existingVersions = await db
     .select()
@@ -62,7 +66,7 @@ export async function createDocumentVersion(
     .where(eq(documentVersions.blueprintId, blueprintId))
     .orderBy(desc(documentVersions.version));
   
-  const latestVersion = existingVersions.length > 0 ? existingVersions[0].version : 0;
+  const latestVersion = existingVersions.length > 0 && existingVersions[0] ? existingVersions[0].version : 0;
   
   try {
     const [version] = await db
@@ -72,7 +76,7 @@ export async function createDocumentVersion(
         version: latestVersion + 1,
         content: content as any,
         changeSummary,
-        createdBy: session!.user.id,
+        createdBy: session.user.id,
       })
       .returning();
     return version;

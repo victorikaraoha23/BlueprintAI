@@ -2,7 +2,7 @@ import { inngest } from "./client";
 
 export const blueprintWorkflow = (inngest.createFunction as any)(
   { id: "blueprint-generation", name: "Blueprint Generation", event: "blueprint/created" },
-  async ({ event, step }: any) => {
+  async ({ event: _event, step }: any) => {
     // Step 1: Research
     const research = await step.run("research", async () => {
       return { status: "research_complete" };

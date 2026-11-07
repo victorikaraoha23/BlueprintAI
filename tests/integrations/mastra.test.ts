@@ -19,8 +19,8 @@ describe("mastra agents", () => {
   it("LLM provider adapter can be swapped", () => {
     registerLLMAdapter({
       name: "test-llm",
-      generateText: async (prompt: string) => "response",
-      generateObject: async (prompt: string, schema: any) => schema.parse({}),
+      generateText: async (_prompt: string) => "response",
+      generateObject: async (_prompt: string, schema: any) => schema.parse({}),
     });
     const adapter = getLLMAdapter("test-llm");
     expect(adapter).toBeDefined();
@@ -32,7 +32,7 @@ describe("mastra agents", () => {
       sources: [{ url: "https://example.com", title: "Test", snippet: "test" }],
       findings: "Some findings",
       confidence: 0.8,
-    });
+    }) as any;
     expect(result).toBeDefined();
     expect(result.sources).toHaveLength(1);
   });

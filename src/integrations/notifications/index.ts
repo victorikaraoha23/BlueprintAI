@@ -3,7 +3,7 @@ export interface NotificationAdapter {
 }
 
 export class EmailNotificationAdapter implements NotificationAdapter {
-  async send(to: string, subject: string, body: string): Promise<void> {
+  async send(to: string, subject: string, _body: string): Promise<void> {
     // Send notification
     console.log(`Sending email to ${to}: ${subject}`);
   }

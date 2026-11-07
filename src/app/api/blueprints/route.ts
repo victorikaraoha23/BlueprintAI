@@ -13,8 +13,10 @@ export async function POST(request: NextRequest) {
     }
     
     const body = await request.json();
-    const blueprint = await createBlueprint(body.projectId, session);
-    await enqueueBlueprintWorkflow(blueprint.id);
+    const blueprint: any = await createBlueprint(body.projectId, session);
+    if (blueprint?.id) {
+      await enqueueBlueprintWorkflow(blueprint.id);
+    }
     
     return NextResponse.json({ data: blueprint }, { status: 201 });
   } catch (error: any) {

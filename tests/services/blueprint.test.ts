@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canTransition, transitionStatus, BLUEPRINT_STATUSES } from "@/services/blueprint/state";
+import { canTransition, transitionStatus } from "@/services/blueprint/state";
 
 describe("blueprint service", () => {
   it("create blueprint from project", async () => {

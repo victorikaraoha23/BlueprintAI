@@ -53,7 +53,7 @@ export async function updateProject(projectId: string, session: Session | null, 
   const validated = UpdateProjectSchema.parse(input);
   const [updated] = await db
     .update(projects)
-    .values({ ...validated, updatedAt: new Date() })
+    .set({ ...validated, updatedAt: new Date() } as any)
     .where(eq(projects.id, projectId))
     .returning();
   

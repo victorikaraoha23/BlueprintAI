@@ -13,6 +13,7 @@ function parseToken(token: string): JWTPayload | null {
       return null;
     }
     const payload = parts[1];
+    if (!payload) return null;
     const decoded = Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8");
     const parsed = JSON.parse(decoded) as JWTPayload;
     

@@ -3,7 +3,7 @@ import type { ResearchProviderAdapter, ResearchResult } from "@/services/researc
 export class TavilyProvider implements ResearchProviderAdapter {
   name = "tavily";
   
-  async search(query: string): Promise<ResearchResult> {
+  async search(_query: string): Promise<ResearchResult> {
     // Real implementation would call Tavily API
     // For now, return structured result
     return {
@@ -17,7 +17,7 @@ export class TavilyProvider implements ResearchProviderAdapter {
 export class BraveSearchProvider implements ResearchProviderAdapter {
   name = "brave";
   
-  async search(query: string): Promise<ResearchResult> {
+  async search(_query: string): Promise<ResearchResult> {
     return {
       sources: [],
       findings: "",
@@ -29,7 +29,7 @@ export class BraveSearchProvider implements ResearchProviderAdapter {
 export class FirecrawlProvider implements ResearchProviderAdapter {
   name = "firecrawl";
   
-  async search(query: string): Promise<ResearchResult> {
+  async search(_query: string): Promise<ResearchResult> {
     return {
       sources: [],
       findings: "",

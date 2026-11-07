@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CreateProjectSchema, UpdateProjectSchema } from "@/services/project/validation";
+import { CreateProjectSchema } from "@/services/project/validation";
 import { checkOwnership } from "@/auth/middleware";
 
 describe("project service", () => {

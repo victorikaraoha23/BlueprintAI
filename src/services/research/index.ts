@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { researchSteps, blueprints, projects } from "@/drizzle/schema";
 import { checkOwnership } from "@/auth/middleware";
 import type { Session } from "@/auth/types";
-import { InvalidProviderError, type ResearchProviderAdapter, type ResearchResult } from "./adapters";
+import { InvalidProviderError, type ResearchProviderAdapter } from "./adapters";
 
 const providers = new Map<string, ResearchProviderAdapter>();
 

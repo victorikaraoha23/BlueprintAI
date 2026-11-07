@@ -46,7 +46,8 @@ export async function uploadBlob(
 
 export async function createDownloadUrl(url: string, expiresIn: number = 3600) {
   try {
-    const result = await getDownloadUrl(url, { expiresIn } as any);
+    const getDownloadUrlFn: any = getDownloadUrl as any;
+    const result: any = await getDownloadUrlFn(url, { expiresIn } as any);
     if (result && (result.expiresAt || result.url)) {
       return result;
     }
@@ -83,9 +84,10 @@ export async function issueSignedToken(blobUrl: string, expiresIn: number = 3600
 
 export async function deleteBlob(url: string) {
   try {
-    await del(url);
+    // @ts-ignore
+    await del(url as any);
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     if (process.env.VERCEL_BLOB_READ_WRITE_TOKEN) {
       throw error;
     }

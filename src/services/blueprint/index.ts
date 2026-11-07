@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { blueprints, projects } from "@/drizzle/schema";
 import { checkOwnership } from "@/auth/middleware";
@@ -54,7 +54,7 @@ export async function updateBlueprintStatus(
   
   const [updated] = await db
     .update(blueprints)
-    .values({ status: newStatus, updatedAt: new Date() })
+    .set({ status: newStatus, updatedAt: new Date() } as any)
     .where(eq(blueprints.id, blueprintId))
     .returning();
   
