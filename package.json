@@ -24,6 +24,8 @@
     "@asteasolutions/zod-to-openapi": "^9.1.0",
     "@mastra/core": "^1.81.0",
     "@neondatabase/serverless": "^1.2.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.0",
     "@vercel/blob": "^2.8.2",
     "ai": "^7.0.159",
     "drizzle-orm": "^0.45.4",
