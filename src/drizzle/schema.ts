@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, index, integer, jsonb, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, index, integer, jsonb, unique, numeric, uniqueIndex } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
@@ -78,6 +78,91 @@ export const blueprints = pgTable(
   }),
 );
 
-export const schema = { users, projects, blueprints };
+export const researchSteps = pgTable(
+  "research_steps",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    blueprintId: uuid("blueprint_id")
+      .notNull()
+      .references(() => blueprints.id, { onDelete: "cascade" }),
+    query: text("query").notNull(),
+    provider: text("provider").notNull(),
+    sources: jsonb("sources").notNull(),
+    findings: text("findings"),
+    confidence: numeric("confidence"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    blueprintIdIdx: index("research_steps_blueprint_id_idx").on(table.blueprintId),
+  }),
+);
+
+export const approvals = pgTable(
+  "approvals",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    blueprintId: uuid("blueprint_id")
+      .notNull()
+      .references(() => blueprints.id, { onDelete: "cascade" }),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    status: text("status").notNull().default("pending"),
+    payload: jsonb("payload"),
+    decidedAt: timestamp("decided_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    blueprintIdIdx: index("approvals_blueprint_id_idx").on(table.blueprintId),
+    statusIdx: index("approvals_status_idx").on(table.status),
+    pendingUnique: uniqueIndex("approvals_blueprint_id_type_pending_unique")
+      .on(table.blueprintId, table.type)
+      .where(sql`status = 'pending'`),
+  }),
+);
+
+export const documentVersions = pgTable(
+  "document_versions",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    blueprintId: uuid("blueprint_id")
+      .notNull()
+      .references(() => blueprints.id, { onDelete: "cascade" }),
+    version: integer("version").notNull(),
+    content: jsonb("content").notNull(),
+    blobUrl: text("blob_url"),
+    blobToken: text("blob_token"),
+    changeSummary: text("change_summary"),
+    createdBy: uuid("created_by")
+      .notNull()
+      .references(() => users.id),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => ({
+    blueprintIdIdx: index("document_versions_blueprint_id_idx").on(table.blueprintId),
+    blueprintVersionUnique: unique("document_versions_blueprint_id_version_unique").on(
+      table.blueprintId,
+      table.version,
+    ),
+  }),
+);
+
+export const schema = { users, projects, blueprints, researchSteps, approvals, documentVersions };
 
 export default schema;
